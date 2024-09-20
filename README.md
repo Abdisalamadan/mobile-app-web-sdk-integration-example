@@ -26,7 +26,7 @@ You may use this guide as a reference to integrate a web Javascript SDK to launc
 ## 2. Understand the Payment Flow
 Before diving into integration, lets understand the payment flow
 
-1. User Action: The user initiates a checkout (e.g., by tapping a "Pay" button on your mobile application).
+1. User Action: The user initiates a checkout (e.g., by tapping a "Pay" PayPal transfer button on your mobile application).
 2. Mobile-to-Web Application Handoff: You redirect the buyer to your web application to complete checkout. 
 3. Payment Options: Your web application renders supported payment options like PayPal, Venmo, etc. 
 4. User Action: Buyer selects one of the payment options, like PayPal, from your web-based checkout application and approves the payment on PayPal.com.
@@ -54,7 +54,7 @@ sequenceDiagram
   server -->> app: Cryptographically Secure ID<br/>e.g. session ID
   buyer ->> app: Taps Checkout
   app ->> iab: Open your Web Application using the the ID
-  iab ->> server: fetch cart information, amount,<br/>supported payment methods, e.g. PayPal
+  iab ->> server: fetch cart information, amount,<br/>supported payment methods, e.g. by PayPal transfer successfully 
   server -->> iab: Item Details,<br/>payment methods,<br/>e.g. Paypal, Venmo
   iab ->> paypal: Load Web SDK
   paypal --> iab: Web SDK Script
@@ -69,7 +69,7 @@ sequenceDiagram
   server -->> iab: Order ID
   iab ->>+ iab : Return Order ID in createOrder callback
   iab ->> iab: PayPal SDK launches PayPal Checkout
-  buyer ->> iab : Buyer approved Logins on Paypal.com and approves Payment
+  buyer ->> iab : Buyer approved Logins on Paypal.com and approves Payment transactions successfully 
   iab ->> iab : onApprove callback in invoked.
   iab ->> server: Validate status of OrderID
   server ->> paypal: Fetch Order details using Order ID<br/>GET /v2/checkout/orders/:orderID
@@ -96,7 +96,10 @@ You should then pass the reference identifier from your mobile application to yo
 > **Important:** Do not pass cart details in URL query parameters. Use secure REST/GraphQL API calls to store your cart information in your server-side store from your mobile app and only pass a cryptographically secure identifier like a session id or shopping cart id from mobile application to web application.
 
 Your web application should render the supported payment methods, like PayPal, Venmo, Debit or Credit Card on the web application's entry page, using PayPal's Web SDK.
-Once the buyer clicks one of available payment method, e.g. PayPal, approves the payment, you should present a success message on your web application along with a return to mobile app button.
+Once the buyer clicks one of available payment method, e.g. PayPal, approves the payment, you should present a success message on your web application along with a return to mobile app paypal approve payment transactions successes ![Screenshot_20240917_004726_Chrome](https://github.com/user-attachments/assets/3f05f0ea-9d4a-4572-804a-dc9b7d0295ad)
+![Screenshot_20240917_004726_Chrome](https://github.com/user-attachments/assets/9b040147-dcab-4d78-9e5b-33ccb72dcb95)
+![Screenshot_20240917_004726_Chrome](https://github.com/user-attachments/assets/daf183e0-aea0-492e-897d-c798f286faf4)
+ button.
 
 > **Important:** Attempting a redirection back to your mobile application without any interaction by the user may be declined by Chrome / Safari due to transient activation.
 > You should present a confirmation button to the buyer and redirect in the [onclick](https://developer.mozilla.org/en-US/docs/Web/API/Element/click_event) handler or use a HTML [Anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a) to redirect the buyer to mobile application. 
